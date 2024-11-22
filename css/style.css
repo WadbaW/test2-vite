@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+}
+
+.infobox {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px 15px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 5px;
+    background-color: #4abcf9b0;
+    color: #282828;
+    backdrop-filter: blur(1px);
+    cursor: default;
+}
+.focus {
+    scale: 1;
+    opacity: 1;
+    transition: all .15s ease-in-out;
+}
+.hidden {
+    scale: 0;
+    opacity: 0;
+}
+h3 {
+    margin: 0;
+}
