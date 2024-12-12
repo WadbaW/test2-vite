@@ -13,13 +13,13 @@ body {
     border-radius: 5px;
     background-color: #4abcf9b0;
     color: #282828;
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(2px);
     cursor: default;
 }
 .focus {
     scale: 1;
     opacity: 1;
-    transition: all .15s ease-in-out;
+    transition: all .1s ease-in-out;
 }
 .hidden {
     scale: 0;
@@ -27,4 +27,53 @@ body {
 }
 h3 {
     margin: 0;
+}
+
+.reset-button {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    padding: 5px;
+    cursor: pointer;
+    /* transition: all .15s ease-in; */
+}
+.reset-button.animate {
+    animation: rotation .3s linear 1 forwards;
+}
+.reset-button, .reset-button svg {
+    width: 35px;
+    height: 35px;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(360deg);
+    } 100% {
+        transform: rotate(0deg);
+    }
+}
+
+  /* Tablette paysage */
+@media screen and (min-width: 391px) and (orientation: portrait) {
+    .infobox {
+        font-size: 2rem;
+        border-radius: 10px;
+    }
+    .reset-button {
+        left: 50px;
+        top: 50px;
+    }
+    .reset-button, .reset-button svg {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+
+  /* Ordinateur portable */
+@media screen and (min-width: 1024px) {
+}
+
+  /* Bureau */
+@media screen and (min-width: 1280px) {
 }

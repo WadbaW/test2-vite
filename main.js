@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { gsap } from "gsap";
-import { directPointLight } from 'three/webgpu';
 
 // Création d'une scène
 const scene = new THREE.Scene();
@@ -39,15 +38,26 @@ loader.load('./data/plan_manu_v3.glb', (gltf) => {
             child.material.color.setHex(0x555555);
         }
     });
-    }, 
+    },
     undefined, (error) => {
         console.error('Une erreur est survenue lors du chargement:', error);
 });
 
+const maxOrbitRadius = 5; // Rayon maximal de l'orbite
+const minOrbitRadius = 2; // Rayon minimal de l'orbite
+
 // Rendu de la scène
 function animate() {
+    // var elapsed = clock.elapsedTime;
+
+    // // Calcul de la position en orbite avec limites
+    // var orbitRadius = Math.min(Math.max(3 + Math.sin(elapsed/4),    minOrbitRadius), maxOrbitRadius);
+
+    // sphere.position.x = Math.sin(elapsed/2) * orbitRadius;
+    // sphere.position.z = Math.cos(elapsed/2) * orbitRadius;
+    // // controls.update(); // Nécessaire si enableDamping ou autoRotate sont définis à true
+
     requestAnimationFrame(animate);
-    // controls.update(); // Nécessaire si enableDamping ou autoRotate sont définis à true
     renderer.render(scene, camera);
 }
 animate();
@@ -190,7 +200,7 @@ function resetZoom(position = {'x':50,'y':50,'z':30}, mainObjectCenter = new THR
     }
 }
 
-resetZoom(last_camera_position);
+resetZoom();
 
 
 function onMouseDown(event) {
@@ -225,7 +235,7 @@ function onMouseDown(event) {
                 infobox.classList.replace('hidden', 'focus');
                 is_animated = false;
                 is_focus = true
-            }, 600);
+            }, 500);
         }
         controls.enabled = false; // Désactivez temporairement OrbitControls
     }
@@ -247,8 +257,48 @@ function onMouseDown(event) {
     }
 }
 
-// Configuration des contrôles
 controls.enablePan = false;
+
+function checkOrientation() {
+    const isMobile = window.innerWidth <= 1200;
+    console.log(isMobile);
+
+    const isPortrait = window.innerHeight < window.innerWidth;
+    console.log(isPortrait);
+    
+    if (isMobile && !isPortrait) {
+        controls.enablePan = true;
+        controls.maxDistance = 100;
+    }
+    // } else {
+    //     controls.enablePan = false;
+    // }
+}
+
+function onWindowResize() {    
+    console.log('resize');
+    camera.aspect = window.innerWidth/ window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    checkOrientation();
+}
+
+window.addEventListener( 'load', onWindowResize, false );
+window.addEventListener( 'resize', onWindowResize, false );
+
+const reset_button = document.getElementById('reset-button');
+reset_button.addEventListener('click', () => {
+    reset_button.classList.remove('animate');
+    resetZoom()
+    void reset_button.offsetWidth; // Force reflow
+    reset_button.classList.add('animate');
+});
+
+  // Vérifiez l'orientation au chargement et lors du redimensionnement
+window.addEventListener('load', checkOrientation);
+window.addEventListener('resize', checkOrientation);
+
+// Configuration des contrôles
 controls.enableDamping = true;
 controls.dampingFactor = 0.3;
 controls.screenSpacePanning = false;
